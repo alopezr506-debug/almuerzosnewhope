@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solicitudes de Almuerzo | New Hope</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Solicitud de almuerzo</h1>
+        <p>
+          Los estudiantes pueden elegir solo entre las opciones publicadas por el
+          administrador.
+        </p>
+      </header>
+
+      <section class="card" id="student-section">
+        <h2>Estudiante: nuevo pedido</h2>
+        <form id="lunch-form">
+          <label for="studentName">Nombre completo del estudiante</label>
+          <input
+            id="studentName"
+            name="studentName"
+            required
+            maxlength="80"
+            placeholder="Ejemplo: Sofía Martínez Pérez"
+          />
+
+          <label for="group">Grupo</label>
+          <input id="group" name="group" required maxlength="30" placeholder="Ejemplo: 7A" />
+
+          <label for="meal">Opción de almuerzo disponible</label>
+          <select id="meal" name="meal" required></select>
+
+          <label for="allergies">Alergias o restricciones</label>
+          <textarea
+            id="allergies"
+            name="allergies"
+            rows="3"
+            placeholder="Ejemplo: sin lactosa, sin maní..."
+          ></textarea>
+
+          <label for="date">Fecha del almuerzo</label>
+          <input id="date" name="date" type="date" required />
+
+          <button type="submit">Enviar solicitud</button>
+          <p class="message" id="studentMessage" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card" id="admin-section">
+        <h2>Administrador: opciones de almuerzo</h2>
+        <p class="helper-text">
+          Desde aquí se actualizan las opciones que verán los estudiantes.
+        </p>
+
+        <form id="admin-form" class="admin-form">
+          <label for="newMeal">Nueva opción de almuerzo</label>
+          <div class="inline-actions">
+            <input
+              id="newMeal"
+              name="newMeal"
+              maxlength="60"
+              placeholder="Ejemplo: Lentejas con arroz"
+              required
+            />
+            <button type="submit">Agregar opción</button>
+          </div>
+          <p class="message" id="adminMessage" aria-live="polite"></p>
+        </form>
+
+        <h3>Opciones activas</h3>
+        <ul id="mealOptionsList" class="option-list"></ul>
+      </section>
+
+      <section class="card">
+        <div class="section-title">
+          <h2>Solicitudes registradas</h2>
+          <button id="clearAll" class="ghost" type="button">Limpiar todo</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre completo</th>
+                <th>Grupo</th>
+                <th>Almuerzo</th>
+                <th>Fecha</th>
+                <th>Alergias</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="requestsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
