@@ -3,98 +3,106 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Solicitudes de Almuerzo | New Hope</title>
+    <title>App de Almuerzos | New Hope</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="container">
       <header>
-        <h1>Solicitud de almuerzo</h1>
+        <h1>App de solicitudes de almuerzo</h1>
         <p>
-          Los estudiantes pueden elegir solo entre las opciones publicadas por el
-          administrador.
+          Flujo completo: inicio de sesión, selección de kiosko/soda, productos, promociones y
+          confirmación con número de orden.
         </p>
       </header>
 
-      <section class="card" id="student-section">
-        <h2>Estudiante: nuevo pedido</h2>
-        <form id="lunch-form">
-          <label for="studentName">Nombre completo del estudiante</label>
-          <input
-            id="studentName"
-            name="studentName"
-            required
-            maxlength="80"
-            placeholder="Ejemplo: Sofía Martínez Pérez"
-          />
-
-          <label for="group">Grupo</label>
-          <input id="group" name="group" required maxlength="30" placeholder="Ejemplo: 7A" />
-
-          <label for="meal">Opción de almuerzo disponible</label>
-          <select id="meal" name="meal" required></select>
-
-          <label for="allergies">Alergias o restricciones</label>
-          <textarea
-            id="allergies"
-            name="allergies"
-            rows="3"
-            placeholder="Ejemplo: sin lactosa, sin maní..."
-          ></textarea>
-
-          <label for="date">Fecha del almuerzo</label>
-          <input id="date" name="date" type="date" required />
-
-          <button type="submit">Enviar solicitud</button>
-          <p class="message" id="studentMessage" aria-live="polite"></p>
-        </form>
-      </section>
-
-      <section class="card" id="admin-section">
-        <h2>Administrador: opciones de almuerzo</h2>
-        <p class="helper-text">
-          Desde aquí se actualizan las opciones que verán los estudiantes.
-        </p>
-
-        <form id="admin-form" class="admin-form">
-          <label for="newMeal">Nueva opción de almuerzo</label>
-          <div class="inline-actions">
-            <input
-              id="newMeal"
-              name="newMeal"
-              maxlength="60"
-              placeholder="Ejemplo: Lentejas con arroz"
-              required
-            />
-            <button type="submit">Agregar opción</button>
+      <section class="card" id="auth-section">
+        <h2>1) Inicio de sesión</h2>
+        <form id="login-form" class="grid-two">
+          <div>
+            <label for="studentCode">Código de estudiante</label>
+            <input id="studentCode" name="studentCode" required placeholder="Ej: EST-0001" />
           </div>
-          <p class="message" id="adminMessage" aria-live="polite"></p>
+          <div>
+            <label for="username">Usuario</label>
+            <input id="username" name="username" required placeholder="Ej: maria.perez" />
+          </div>
+          <div>
+            <label for="password">Contraseña</label>
+            <input id="password" name="password" type="password" required placeholder="••••••••" />
+          </div>
+          <div class="align-end">
+            <button type="submit">Ingresar</button>
+          </div>
         </form>
-
-        <h3>Opciones activas</h3>
-        <ul id="mealOptionsList" class="option-list"></ul>
+        <p class="helper-text">
+          Demo encargado principal: <strong>admin</strong> / <strong>admin123</strong> / código
+          <strong>ADM-0001</strong>.
+        </p>
+        <p class="message" id="authMessage" aria-live="polite"></p>
       </section>
 
-      <section class="card">
-        <div class="section-title">
-          <h2>Solicitudes registradas</h2>
-          <button id="clearAll" class="ghost" type="button">Limpiar todo</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre completo</th>
-                <th>Grupo</th>
-                <th>Almuerzo</th>
-                <th>Fecha</th>
-                <th>Alergias</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody id="requestsTableBody"></tbody>
-          </table>
-        </div>
+      <section class="card hidden" id="admin-section">
+        <h2>Panel del encargado principal</h2>
+        <p class="helper-text">Desde aquí se gestionan promociones y filtros por kiosko/soda.</p>
+
+        <form id="promo-form" class="admin-form">
+          <h3>Crear promoción</h3>
+          <div class="grid-two">
+            <div>
+              <label for="promoName">Nombre de promoción</label>
+              <input id="promoName" name="promoName" required maxlength="80" placeholder="Combo del día" />
+            </div>
+            <div>
+              <label for="promoDiscount">Descuento (%)</label>
+              <input id="promoDiscount" name="promoDiscount" type="number" min="1" max="80" required />
+            </div>
+            <div>
+              <label for="promoLocation">Aplicar en</label>
+              <select id="promoLocation" name="promoLocation" required></select>
+            </div>
+            <div class="align-end">
+              <button type="submit">Guardar promoción</button>
+            </div>
+          </div>
+        </form>
+
+        <form id="filters-form" class="admin-form">
+          <h3>Habilitar kioskos/sodas para pedidos</h3>
+          <div id="locationToggles" class="toggle-list"></div>
+          <button type="submit">Guardar filtros</button>
+        </form>
+
+        <h3>Promociones activas</h3>
+        <ul id="promotionsList" class="option-list"></ul>
+        <p class="message" id="adminMessage" aria-live="polite"></p>
+      </section>
+
+      <section class="card hidden" id="order-section">
+        <h2>2) Solicitar almuerzo / soda</h2>
+        <form id="order-form">
+          <label for="location">Soda o kiosko</label>
+          <select id="location" name="location" required></select>
+
+          <label for="lunch">Opción de almuerzo</label>
+          <select id="lunch" name="lunch" required></select>
+
+          <fieldset>
+            <legend>Productos de la soda</legend>
+            <div id="extrasList" class="extras-grid"></div>
+          </fieldset>
+
+          <label for="paymentBox">Caja de pago</label>
+          <select id="paymentBox" name="paymentBox" required>
+            <option value="">Selecciona caja</option>
+            <option>Caja 1</option>
+            <option>Caja 2</option>
+            <option>Caja 3</option>
+          </select>
+
+          <button type="submit">Completar pedido</button>
+          <p class="message" id="orderMessage" aria-live="polite"></p>
+        </form>
       </section>
     </main>
 
