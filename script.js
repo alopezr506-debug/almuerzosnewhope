@@ -33,6 +33,25 @@ const locationToggles = document.querySelector('#locationToggles');
 
 let currentUser = null;
 
+// UI checks limit accidental access in this demo. Production requires server authorization.
+const setCurrentUser = (user) => {
+  currentUser = user;
+  adminSection.classList.toggle('hidden', user?.role !== 'principal');
+  orderSection.classList.toggle('hidden', !user);
+  promoForm.reset();
+  filtersForm.reset();
+  orderForm.reset();
+  adminMessage.textContent = '';
+  orderMessage.textContent = '';
+};
+
+const requirePrincipal = () => {
+  if (currentUser?.role === 'principal') return true;
+  adminSection.classList.add('hidden');
+  adminMessage.textContent = 'Acceso denegado. Se requiere el encargado principal.';
+  return false;
+};
+
 const getPromotions = () => JSON.parse(localStorage.getItem(PROMO_KEY) ?? '[]');
 const savePromotions = (promos) => localStorage.setItem(PROMO_KEY, JSON.stringify(promos));
 
@@ -107,6 +126,7 @@ const renderPromotions = () => {
 
 loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  setCurrentUser(null);
   const formData = new FormData(loginForm);
   const studentCode = formData.get('studentCode')?.toString().trim();
   const username = formData.get('username')?.toString().trim();
@@ -122,16 +142,15 @@ loginForm.addEventListener('submit', (event) => {
     return;
   }
 
-  currentUser = found;
+  setCurrentUser(found);
+  renderFilters();
   authMessage.textContent = `Bienvenido/a ${found.username}.`;
-  orderSection.classList.remove('hidden');
-  if (found.role === 'principal') {
-    adminSection.classList.remove('hidden');
-  }
+  loginForm.reset();
 });
 
 promoForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  if (!requirePrincipal()) return;
   const data = new FormData(promoForm);
   const name = data.get('promoName')?.toString().trim();
   const discount = Number(data.get('promoDiscount'));
@@ -147,6 +166,7 @@ promoForm.addEventListener('submit', (event) => {
 
 filtersForm.addEventListener('submit', (event) => {
   event.preventDefault();
+  if (!requirePrincipal()) return;
   const selected = Array.from(document.querySelectorAll('input[name="enabledLocations"]:checked')).map(
     (checkbox) => checkbox.value,
   );
@@ -184,6 +204,7 @@ orderForm.addEventListener('submit', (event) => {
   orderForm.reset();
 });
 
+setCurrentUser(null);
 renderStaticOptions();
 renderFilters();
 renderPromotions();
